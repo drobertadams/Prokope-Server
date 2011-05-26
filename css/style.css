@@ -111,6 +111,11 @@ h2 {
     margin: 0;
 }
 
+#error {
+	text-align: center;
+	color: red;
+}
+
 a {
     text-decoration: none;
 }

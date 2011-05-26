@@ -12,7 +12,7 @@ class User extends CI_Controller {
 	/** Handles user login. */
 	public function login()
 	{
-		$this->quickauth->login($_POST['username'], $_POST['password']);
+		$this->quickauth->login( $this->input->post('username', TRUE), $this->input->post('password', TRUE) );
 
 		redirect("/");
 	}
@@ -38,10 +38,10 @@ class User extends CI_Controller {
 		// Grab the user info from the form.
 		$userdata = array(
 			'type' => array(1), // users go into the default (admin) group
-			'username' => $_POST['username'],
-			'password' => $_POST['password'],
-			'firstname' => $_POST['firstname'],
-			'lastname' => $_POST['lastname']
+			'username' => $this->input->post('username', TRUE),
+			'password' => $this->input->post('password', TRUE),
+			'firstname' => $this->input->post('firstname', TRUE),
+			'lastname' => $this->input->post('lastname', TRUE)
 		);
 
 		// Register the user.
