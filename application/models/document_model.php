@@ -20,5 +20,19 @@ class Document_model extends CI_Model {
 
 		$this->db->insert('documents', $this); 
 	}
+
+	/** Fetches all the documents associated with the currently logged in user. 
+	  * Returns an array of objects with id and title. */
+	public function usersdocs()
+	{
+		// Get the user's id.
+		$userid = $this->quickauth->user()->id;
+
+		// Get the information.
+		$this->db->select('id, title')->from('documents')->where('userid', $userid);
+		$query = $this->db->get();
+
+		return $query->result();
+	}
 }
 ?>

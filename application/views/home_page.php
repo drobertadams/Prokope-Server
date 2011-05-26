@@ -17,8 +17,16 @@
 <br/>
 
 <h2>My Documents</h2>
-<ul id="doc_list">
-</ul>
+<?php 
+// If we have a list of documents, display them as links.
+if ( isset($docs) ) { 
+	echo "<ul>";
+	foreach ($docs as $doc) { 
+		echo "<li><a href=\"" . site_url("Document/view/$doc->id") . "\">$doc->title</a></li>";
+	} 
+	echo "</ul>";
+} 
+?>
 
 <?php if ($this->quickauth->logged_in()) { ?>
 	<p><a href="#" id="upload_form_label">Upload New Document</a></p>
