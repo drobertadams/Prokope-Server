@@ -2,6 +2,7 @@
 
 class Document_model extends CI_Model {
 
+	var $id = '';
  	var $title   = '';
     var $content = '';
     var $created = '';
@@ -13,12 +14,29 @@ class Document_model extends CI_Model {
 	  */
 	public function add($title, $content)
 	{
+		unset($this->id); // hides this variable from the db library, otherwise it will be used for insert
 		$this->title = $title;
 		$this->content = $content;
 		$this->created = date( 'Y-m-d H:i:s');
 		$this->userid = $this->quickauth->user()->id;
 
 		$this->db->insert('documents', $this); 
+		$this->id = $this->db->insert_id();	// grab the id last inserted
+	}
+
+	/** Fetches a specific document. @id is the id of the document. */
+	public function get($id)
+	{
+		$this->db->select('*')->from('documents')->where('id', $id);
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+				$doc = $query->row();
+				$this->id = $doc->id;
+				$this->title = $doc->title;
+				$this->content = $doc->content;
+				$this->created = $doc->created;
+				$this->userid = $doc->userid;
+		}
 	}
 
 	/** Fetches all the documents associated with the currently logged in user. 

@@ -27,9 +27,9 @@ class Document extends CI_Controller {
 		$this->load->helper('file');
 		$content = read_file( $upload_data['full_path'] );
 
-		// Store the data in the database.
 		$this->load->model('Document_model');
 
+		// Make sure the user provided a title.
 		if ( ! $this->input->post('title', TRUE) ) {
 			// User didn't provide a title.  Delete the file and display an error on the home page.
 			delete_files( $upload_data['file_path'] );
@@ -37,16 +37,41 @@ class Document extends CI_Controller {
 			$this->load->view('home_page', $error);
 			return;
 		}
+
+		// Add the document to the database.
 		$this->Document_model->add( $this->input->post('title'), $content );
 
 		// We're done. Delete the file and return home.
 		delete_files( $upload_data['file_path'] );
-		$this->load->view('home_page');
+		redirect('/');
 	}
 
 	/** Empty index. */
 	public function index()
 	{
 		redirect('/');
+	}
+
+	/** View a document. */
+	public function view($id)
+	{
+		// Fetch the document.
+		$this->load->model('Document_model');
+		$this->Document_model->get($id);
+		
+		// ### Massage the document to make it suitable for display. ###
+        // Force a line break after each line.
+        $this->Document_model->content = str_replace("</l>", "</l><br/>", $this->Document_model->content);
+        // Make sure that "indent"ed lines are indented. &#160; is the XML version of &nbsp.
+        $this->Document_model->content = str_replace('rend="indent">', 
+			'rend="indent">&#160;&#160;&#160;&#160;&#160;&#160;', $this->Document_model->content);
+		// Convert words (w) to hyperlinks (a href).
+		// ims turns on the case-insensitive, multiline, dot matches newline flags.
+		$this->Document_model->content = preg_replace('/<w\s+id="([0-9.]+)">([^>]+)<\/w>/ims', 
+			'<a href="$1">$2</a>', $this->Document_model->content);
+
+		// Display it.
+		$data = array('doc' => $this->Document_model);
+		$this->load->view('doc_view', $data);
 	}
 }
