@@ -2,7 +2,7 @@
 
 class Comment_model extends CI_Model {
 
-	var $id = '';
+	var $id = 0;
 	var $document_id = 0;
     var $content = '';
     var $created = '';
@@ -24,20 +24,22 @@ class Comment_model extends CI_Model {
 		$this->id = $this->db->insert_id();	// grab the id last inserted
 	}
 
-	/** Fetches a specific document. @id is the id of the document. */
-/*	public function get($id)
+	/** Fetches a specific document. @document_id is the id of the DOCUMENT to which
+	 * the comment is applied. 
+	 */
+	public function get_by_document($document_id)
 	{
-		$this->db->select('*')->from('documents')->where('id', $id);
+		$this->db->select('*')->from('comments')->where('document_id', $document_id);
 		$query = $this->db->get();
 		if ($query->num_rows() > 0) {
-				$doc = $query->row();
-				$this->id = $doc->id;
-				$this->title = $doc->title;
-				$this->content = $doc->content;
-				$this->created = $doc->created;
-				$this->userid = $doc->userid;
+				$comment = $query->row();
+				$this->id = $comment->id;
+				$this->document_id = $document_id;
+				$this->content = $comment->content;
+				$this->created = $comment->created;
+				$this->userid = $comment->userid;
 		}
 	}
-*/
+
 }
 ?>

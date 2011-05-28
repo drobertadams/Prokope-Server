@@ -16,8 +16,9 @@
 
 <div class="contentbox" id="commentary">
 	<h2>Commentary</h2>
-	{{commentary}}
-	<?php if ($this->quickauth->logged_in()) { ?>
+	<?php if (isset($comment)) { echo $comment->content; } ?>
+	<?php // Display the upload form if the user is logged in and there are no comments already.
+		  if ($this->quickauth->logged_in() and $comment->id == 0 ) { ?>
 			<p><a href="#" id="upload_comment_form_label">Upload Comments</a></p>
 			<form id="upload_comment_form" action="<?php echo site_url("Comment/add"); ?>" enctype="multipart/form-data" method="post">
 				<input type="hidden" name="document_id" value="<?php echo $doc->id; ?>" />

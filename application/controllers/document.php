@@ -51,8 +51,19 @@ class Document extends CI_Controller {
 		$this->Document_model->content = preg_replace('/<w\s+id="([0-9.]+)">([^>]+)<\/w>/ims', 
 			'<a href="$1">$2</a>', $this->Document_model->content);
 
-		// Display it.
-		$data = array('doc' => $this->Document_model);
+		// Fetch the associated commentary.
+		$this->load->model('Comment_model');
+		$this->Comment_model->get_by_document($this->Document_model->id);
+		// If there are no comments, display "None".
+		if ( $this->Comment_model->id == 0 ) {
+			$this->Comment_model->content = "None";
+		}
+        // Convert "comment" to "li" (list items).
+		$this->Comment_model->content = str_replace('<comment', '<li', $this->Comment_model->content);
+		$this->Comment_model->content = str_replace("</comment", "</li", $this->Comment_model->content);
+
+		// Display everything.
+		$data = array('doc' => $this->Document_model, 'comment' => $this->Comment_model);
 		$this->load->view('doc_view', $data);
 	}
 }
