@@ -35,6 +35,6 @@ if ( isset($docs) ) {
 		File: <input type="file" name="userfile"/> <br/>
 		<input type="submit" value="Upload">
 	</form>
-<? } ?>
+<?php } ?>
 
 <?php $this->load->view('footer'); ?>
