@@ -17,14 +17,14 @@
 <div class="contentbox" id="commentary">
 	<h2>Commentary</h2>
 	{{commentary}}
-	{% if nickname %}
-	<p><a href="#" id="upload_comment_form_label">Upload Comments</a></p>
-	<form id="upload_comment_form" action="/comment" enctype="multipart/form-data" method="post">
-		<input type="hidden" name="doc_key" value="" />
-	    File: <input type="file" name="commentary"/> <br/>
-	    <input type="submit" value="Upload">
-	</form>
-	{% endif %}
+	<?php if ($this->quickauth->logged_in()) { ?>
+			<p><a href="#" id="upload_comment_form_label">Upload Comments</a></p>
+			<form id="upload_comment_form" action="<?php echo site_url("Comment/add"); ?>" enctype="multipart/form-data" method="post">
+				<input type="hidden" name="document_id" value="<?php echo $doc->id; ?>" />
+				File: <input type="file" name="userfile"></input> <br/>
+				<input type="submit" value="Upload"></input>
+			</form>
+	<?php } ?>
 </div>
 
 <div class="contentbox" id="vocabulary">
