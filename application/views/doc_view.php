@@ -39,20 +39,21 @@
 				File: <input type="file" name="userfile"/> <br/>
 				<input type="submit" value="Upload">
 			</form>
-	<? } ?>
+	<?php } ?>
 </div>
 
 <div class="contentbox"  id="sidebar">
 	<h2>Sidebar</h2>
-	{{sidebar}}
-	{% if nickname %}
-	<p><a href="#" id="upload_sidebar_form_label">Upload Sidebar</a></p>
-	<form id="upload_sidebar_form" action="/sidebar" enctype="multipart/form-data" method="post">
-		<input type="hidden" name="doc_key" value="" />
-	    File: <input type="file" name="sidebar"/> <br/>
-	    <input type="submit" value="Upload">
-	</form>
-	{% endif %}	
+	<?php if (isset($sidebar)) { echo $sidebar->content; } ?>
+	<?php // Display the upload form if the user is logged in and there is no vocabulary already.
+		  if ($this->quickauth->logged_in() and $sidebar->id == 0 ) { ?>
+			<p><a href="#" id="upload_sidebar_form_label">Upload Sidebar</a></p>
+			<form id="upload_sidebar_form" action="<?php echo site_url("Sidebar/add"); ?>" enctype="multipart/form-data" method="post">
+				<input type="hidden" name="document_id" value="<?php echo $doc->id; ?>" />
+				File: <input type="file" name="userfile"/> <br/>
+				<input type="submit" value="Upload">
+			</form>
+	<?php } ?>
 </div>
 
 <?php $this->load->view('footer'); ?>

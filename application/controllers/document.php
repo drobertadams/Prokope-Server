@@ -70,10 +70,19 @@ class Document extends CI_Controller {
 			$this->Vocabulary_model->content = "None";
 		}
 
+		// Fetch the associated sidebar.
+		$this->load->model('Sidebar_model');
+		$this->Sidebar_model->get_by_document($this->Document_model->id);
+		// If there is no sidebar, display "None".
+		if ( $this->Sidebar_model->id == 0 ) {
+			$this->Sidebar_model->content = "None";
+		}
+
 		// Display everything.
 		$data = array(	'doc' => $this->Document_model, 
 						'comment' => $this->Comment_model, 
-						'vocabulary' => $this->Vocabulary_model);
+						'vocabulary' => $this->Vocabulary_model,
+						'sidebar' => $this->Sidebar_model);
 		$this->load->view('doc_view', $data);
 	}
 }
