@@ -62,8 +62,18 @@ class Document extends CI_Controller {
 		$this->Comment_model->content = str_replace('<comment', '<li', $this->Comment_model->content);
 		$this->Comment_model->content = str_replace("</comment", "</li", $this->Comment_model->content);
 
+		// Fetch the associated vocabulary.
+		$this->load->model('Vocabulary_model');
+		$this->Vocabulary_model->get_by_document($this->Document_model->id);
+		// If there is no vocabulary, display "None".
+		if ( $this->Vocabulary_model->id == 0 ) {
+			$this->Vocabulary_model->content = "None";
+		}
+
 		// Display everything.
-		$data = array('doc' => $this->Document_model, 'comment' => $this->Comment_model);
+		$data = array(	'doc' => $this->Document_model, 
+						'comment' => $this->Comment_model, 
+						'vocabulary' => $this->Vocabulary_model);
 		$this->load->view('doc_view', $data);
 	}
 }

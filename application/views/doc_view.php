@@ -30,15 +30,16 @@
 
 <div class="contentbox" id="vocabulary">
 	<h2>Vocabulary</h2>
-	{{vocabulary}}
-	{% if nickname %}
-	<p><a href="#" id="upload_vocab_form_label">Upload Vocabulary</a></p>
-	<form id="upload_vocab_form" action="/vocab" enctype="multipart/form-data" method="post">
-		<input type="hidden" name="doc_key" value="" />
-	    File: <input type="file" name="vocabulary"/> <br/>
-	    <input type="submit" value="Upload">
-	</form>
-	{% endif %}
+	<?php if (isset($vocabulary)) { echo $vocabulary->content; } ?>
+	<?php // Display the upload form if the user is logged in and there is no vocabulary already.
+		  if ($this->quickauth->logged_in() and $vocabulary->id == 0 ) { ?>
+			<p><a href="#" id="upload_vocab_form_label">Upload Vocabulary</a></p>
+			<form id="upload_vocab_form" action="<?php echo site_url("Vocabulary/add"); ?>" enctype="multipart/form-data" method="post">
+				<input type="hidden" name="document_id" value="<?php echo $doc->id; ?>" />
+				File: <input type="file" name="userfile"/> <br/>
+				<input type="submit" value="Upload">
+			</form>
+	<? } ?>
 </div>
 
 <div class="contentbox"  id="sidebar">
