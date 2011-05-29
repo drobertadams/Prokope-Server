@@ -1,0 +1,4 @@
+The server for the Prokope project (https://github.com/drobertadams/Prokope).
+
+This repo doesn't include a valid CodeIgniter database config file. If you pull the
+project yourself, you'll have to add one.
