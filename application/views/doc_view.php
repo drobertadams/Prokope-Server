@@ -10,8 +10,8 @@
 
 <div class="contentbox" id="document">
 	<span id="document_id" style="display: none"><?php echo $doc->id; ?></span>
-	<h2 id="title"><?php echo $doc->title; ?></h2>
-	<div id="text"><?php echo $doc->content; ?></div>
+	<h2 id="title"><?php echo $document->title; ?></h2>
+	<div id="text"><?php echo $document->content; ?></div>
 </div>
 
 <div class="contentbox" id="commentary">

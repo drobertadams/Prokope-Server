@@ -33,56 +33,12 @@ class Document extends CI_Controller {
 		redirect('/');
 	}
 
+
 	/** View a document. */
 	public function view($id)
 	{
-		// Fetch the document.
-		$this->load->model('Document_model');
-		$this->Document_model->get($id);
-		
-		// ### Massage the document to make it suitable for display. ###
-        // Force a line break after each line.
-        $this->Document_model->content = str_replace("</l>", "</l><br/>", $this->Document_model->content);
-        // Make sure that "indent"ed lines are indented. &#160; is the XML version of &nbsp.
-        $this->Document_model->content = str_replace('rend="indent">', 
-			'rend="indent">&#160;&#160;&#160;&#160;&#160;&#160;', $this->Document_model->content);
-		// Convert words (w) to hyperlinks (a href).
-		// ims turns on the case-insensitive, multiline, dot matches newline flags.
-		$this->Document_model->content = preg_replace('/<w\s+id="([0-9.]+)">([^>]+)<\/w>/ims', 
-			'<a href="$1">$2</a>', $this->Document_model->content);
-
-		// Fetch the associated commentary.
-		$this->load->model('Comment_model');
-		$this->Comment_model->get_by_document($this->Document_model->id);
-		// If there are no comments, display "None".
-		if ( $this->Comment_model->id == 0 ) {
-			$this->Comment_model->content = "None";
-		}
-        // Convert "comment" to "li" (list items).
-		$this->Comment_model->content = str_replace('<comment', '<li', $this->Comment_model->content);
-		$this->Comment_model->content = str_replace("</comment", "</li", $this->Comment_model->content);
-
-		// Fetch the associated vocabulary.
-		$this->load->model('Vocabulary_model');
-		$this->Vocabulary_model->get_by_document($this->Document_model->id);
-		// If there is no vocabulary, display "None".
-		if ( $this->Vocabulary_model->id == 0 ) {
-			$this->Vocabulary_model->content = "None";
-		}
-
-		// Fetch the associated sidebar.
-		$this->load->model('Sidebar_model');
-		$this->Sidebar_model->get_by_document($this->Document_model->id);
-		// If there is no sidebar, display "None".
-		if ( $this->Sidebar_model->id == 0 ) {
-			$this->Sidebar_model->content = "None";
-		}
-
-		// Display everything.
-		$data = array(	'doc' => $this->Document_model, 
-						'comment' => $this->Comment_model, 
-						'vocabulary' => $this->Vocabulary_model,
-						'sidebar' => $this->Sidebar_model);
+		$this->load->helper('my_document_helper');
+		$data = get_document_components($id);
 		$this->load->view('doc_view', $data);
 	}
 }
