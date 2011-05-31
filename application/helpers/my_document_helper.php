@@ -18,7 +18,7 @@ if ( ! function_exists('get_document_components'))
 		// Fetch the document.
 		$CI->load->model('Document_model');
 		$CI->Document_model->get($id);
-		
+
 		// ### Massage the document to make it suitable for display. ###
         // Force a line break after each line.
         $CI->Document_model->content = str_replace("</l>", "</l><br/>", $CI->Document_model->content);
