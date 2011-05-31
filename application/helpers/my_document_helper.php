@@ -48,6 +48,10 @@ if ( ! function_exists('get_document_components'))
 		if ( $CI->Vocabulary_model->id == 0 ) {
 			$CI->Vocabulary_model->content = "None";
 		}
+        // Convert "vocab" to "li" (list items).
+		$CI->Vocabulary_model->content = str_replace('<vocab ', '<li ', $CI->Vocabulary_model->content);
+		$CI->Vocabulary_model->content = str_replace("</vocab>", "</li>", $CI->Vocabulary_model->content);
+
 
 		// Fetch the associated sidebar.
 		$CI->load->model('Sidebar_model');
