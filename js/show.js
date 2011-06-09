@@ -21,7 +21,6 @@ $(document).ready(function()
             // This is called when the user clicks on the label.
             clearForm(form);                                                // clear the form
             $(form).toggle('blind');                                        // display the form
-//            $(form + " input[name='doc_key']").val(DocKey);    // store the document key
          	return false;
         });
     });

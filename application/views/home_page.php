@@ -32,9 +32,38 @@ if ( isset($docs) ) {
 	<p><a href="#" id="upload_form_label">Upload New Document</a></p>
 	<form id="upload_form" action="<?php echo site_url("Document/add");?>" enctype="multipart/form-data" method="post">
 		Title: <input type="text" name="title" /> <br/>
+		Author: <select name="author">
+			<?php foreach ($authors as $author) {
+				echo "<option value=\"$author->id\">$author->name</option>";
+			}
+			?>
+		</select></br>
 		File: <input type="file" name="userfile"/> <br/>
 		<input type="submit" value="Upload">
 	</form>
 <?php } ?>
+
+<h2>Authors</h2>
+
+<?php 
+// Display the list of authors
+if ( isset($authors) ) { 
+	echo "<ul>";
+	foreach ($authors as $author) { 
+		echo "<li>$author->name</li>";
+	} 
+	echo "</ul>";
+} 
+?>
+
+<?php if ($this->quickauth->logged_in()) { ?>
+	<p><a href="#" id="author_upload_form_label">Create New Author</a></p>
+	<form id="author_upload_form" action="<?php echo site_url("Author/add");?>" method="post">
+		Name: <input type="text" name="name" /> <br/>
+		Icon URL: <input type="text" name="icon" /> <br/>
+		<input type="submit" value="Upload">
+	</form>
+<?php } ?>
+
 
 <?php $this->load->view('footer'); ?>

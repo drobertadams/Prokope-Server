@@ -8,11 +8,13 @@
 $(document).ready(function()
 {
     // Hide the upload document form and attach a click handler to toggle its display.
-    $("#upload_form").hide();
-    $("#upload_form_label").click(function() {
-        $('#upload_form').toggle('blind');
-     	return false;
-    });
+    $.each(["#upload_form", "#author_upload_form"], function(index, form) {   
+		$(form).hide();
+		$(form+"_label").click(function() {
+			$(form).toggle('blind');
+			return false;
+		});
+	});
     
     // Fetch the list of documents available to this user and display them
     // as <li><a href="/document/KEY">TITLE</a></li>

@@ -106,9 +106,10 @@ h1, h1 a {
 
 h2 {
     color:#7AAADE;
-    padding: 0;
+/*    padding: 0; */
     padding-bottom: 0.5em;
-    margin: 0;
+	margin-bottom: 0;
+/*    margin: 0; */
 }
 
 #error {

@@ -10,8 +10,10 @@ class Home extends CI_Controller {
 		$data = NULL;
 		if ($this->quickauth->logged_in()) {
 			$this->load->model('Document_model');
+			$this->load->model('Author_model');
 			$docs = $this->Document_model->usersdocs();
-			$data = array('docs' => $docs);
+			$authors = $this->Author_model->get();
+			$data = array('docs' => $docs, 'authors' => $authors);
 		}
 		$this->load->view('home_page', $data);
 	}

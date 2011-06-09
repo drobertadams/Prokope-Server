@@ -20,12 +20,22 @@ CREATE TABLE IF NOT EXISTS `group_memberships` (
     PRIMARY KEY(`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+create table if not exists `authors` (
+	`id` int(11) not null auto_increment,
+	`name` varchar(100) not null default '',
+	`icon` varchar(1024) default '',
+	`created` datetime not null,
+	`userid` int(11) not null,
+	primary key(`id`)
+) engine=myisam default charset=utf8;
+
 create table if not exists `documents` (
 	`id` int(11) not null auto_increment,
 	`title` varchar(100) not null default '',
 	`content` mediumtext not null default '',
 	`created` datetime not null,
 	`userid` int(11) not null,
+	`authorid` int(11) not null,
 	primary key(`id`)
 ) engine=myisam default charset=utf8;
 
