@@ -1,3 +1,5 @@
+* Document XML markup.
+* Handle 3 levels: author, work, chapter?
 * Insert sample media within the document.
 * Flash messages (Document and Author controller).
 * Validate uploads.

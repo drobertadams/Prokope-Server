@@ -1,0 +1,16 @@
+Prokope XML Format Documentation
+
+=Main Document=
+
+body
+	[chapter @id]
+		[section @id]
+	[div1]
+		[div2]
+			[lg @type]				- line group
+				[l @n]				- line
+					w @id			- word
+					pc				- punctuation
+			sentence				- sentence
+				w @id				- word
+
