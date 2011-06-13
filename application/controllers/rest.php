@@ -24,6 +24,7 @@ class rest extends CI_Controller
 	public function big()
 	{
 		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
+		$url = site_url("rest/document/1");
 		$this->output->set_output(<<<EOT
 		<prokope>
 			<author name="Cicero" icon="url">
@@ -32,7 +33,7 @@ class rest extends CI_Controller
 				<work name="Work 3" url="url" />
 			</author>
 			<author name="Martial" icon="url">
-				<work name="Work 0" url="url" />
+				<work name="Work 0" url="$url" />
 				<work name="Work 1" url="url" />
 				<work name="Work 2" url="url" />
 				<work name="Work 3" url="url" />
@@ -80,7 +81,7 @@ class rest extends CI_Controller
 			</author>
 		</prokope>
 EOT
-		);
+		); 
 
 	}
 }
