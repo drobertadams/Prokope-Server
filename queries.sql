@@ -32,10 +32,11 @@ create table if not exists `authors` (
 create table if not exists `documents` (
 	`id` int(11) not null auto_increment,
 	`title` varchar(100) not null default '',
-	`content` mediumtext not null default '',
+	`content` mediumtext default '',
 	`created` datetime not null,
 	`userid` int(11) not null,
 	`authorid` int(11) not null,
+	`parentid` int(11) default '',
 	primary key(`id`)
 ) engine=myisam default charset=utf8;
 
@@ -65,3 +66,9 @@ create table if not exists `sidebars` (
 	`userid` int(11) not null,
 	primary key(`id`)
 ) engine=myisam default charset=utf8; 
+
+# Add support for hierarchical documents.
+alter table documents add column (`parentid` int(11) default '');
+alter table documents change column `content` (`content` mediumtext default '');
+# Add the root "Document" with id=1.
+insert into documents (id, title, created, userid, authorid, parentid) values (1, "Document", now(), -1, -1, NULL); 

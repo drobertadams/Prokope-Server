@@ -25,9 +25,9 @@ if ( ! function_exists('get_file_content'))
 
 		if ( ! $CI->upload->do_upload() )
 		{
-			// There was a problem. Grab the error message and display it on the home page.
-			$error = array('error' => $CI->upload->display_errors());
-			$CI->load->view('home_page', $error);
+			$CI->load->library('session');
+			$CI->session->set_flashdata('error', $CI->upload->display_errors());
+			redirect("/");
 			return;
 		}
 

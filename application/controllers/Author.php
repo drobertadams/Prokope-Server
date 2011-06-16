@@ -9,8 +9,9 @@ class Author extends CI_Controller {
 		// Make sure the user provided a name.
 		if ( ! $this->input->post('name', TRUE) ) {
 			// User didn't provide a name. Display an error on the home page.
-			$error = array('error' => "<p>You did not provide a name for the author.</p>");
-			$this->load->view('home_page', $error);
+			$this->load->library('session');
+			$this->session->set_flashdata('error', "You did not provide a name for the author.");
+			redirect("/");
 			return;
 		}
 
