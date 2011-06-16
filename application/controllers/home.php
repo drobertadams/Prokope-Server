@@ -6,6 +6,8 @@ class Home extends CI_Controller {
 	/** Displays the home page. */
 	public function index()
 	{
+		$this->load->library('session');
+
 		// If the user is logged in, fetch their documents.
 		$data = NULL;
 		if ($this->quickauth->logged_in()) {

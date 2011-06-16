@@ -3,7 +3,7 @@
 <script src="<?php echo base_url(); ?>js/index.js" type="text/javascript"></script>
 
 <div id="error">
-<?php if (isset($error)) { echo $error; } ?>
+<?php echo $this->session->flashdata('error'); ?>
 </div>
 
 <div class="contentbox">
@@ -18,28 +18,77 @@
 
 <h2>My Documents</h2>
 <?php 
+
+// Some helper functions.
+
+// Function to find a document's title by id from a list of documents.
+// Returns "" or "in title"
+function get_doc_title($docs, $id)
+{
+	for ($i = 0; $i < count($docs); $i++)
+		if ( $docs[$i]->id == $id )
+			return "in " . $docs[$i]->title;
+	return "";
+}
+
+// Function to find an author's name by id from a list of authors.
+// Returns "" or "by title"
+function get_author_name($authors, $id)
+{
+	for ($i = 0; $i < count($authors); $i++)
+		if ( $authors[$i]->id == $id )
+			return "by " . $authors[$i]->name;
+	return "";
+}
+
 // If we have a list of documents, display them as links.
 if ( isset($docs) ) { 
 	echo "<ul>";
 	foreach ($docs as $doc) { 
-		echo "<li><a href=\"" . site_url("Document/view/$doc->id") . "\">$doc->title</a></li>";
+		echo "<li><a href=\"" . site_url("Document/view/$doc->id") . "\">$doc->title</a> " . 
+			get_doc_title($docs, $doc->parentid) . " " .get_author_name($authors, $doc->authorid) . 
+			"</li>";
 	} 
 	echo "</ul>";
 } 
 ?>
 
-<?php if ($this->quickauth->logged_in()) { ?>
+<?php 
+	// If the user is logged in, display a document upload form.
+	if ($this->quickauth->logged_in()) { ?>
 	<p><a href="#" id="upload_form_label">Upload New Document</a></p>
 	<form id="upload_form" action="<?php echo site_url("Document/add");?>" enctype="multipart/form-data" method="post">
-		Title: <input type="text" name="title" /> <br/>
-		Author: <select name="author">
+	<table>
+	<tr>
+		<td>Title:</td> <td> <input type="text" name="title" /> </td>
+	</tr>
+	<tr>
+		<td>Author:</td> <td><select name="author">
 			<?php foreach ($authors as $author) {
 				echo "<option value=\"$author->id\">$author->name</option>";
 			}
 			?>
-		</select></br>
-		File: <input type="file" name="userfile"/> <br/>
-		<input type="submit" value="Upload">
+		</select></td>
+	</tr>
+	<tr>
+		<td>Parent document:</td> <td> <select name="parent">
+			<option value="1">None</option>
+			<?php foreach ($docs as $doc) {
+				if ( $doc->content == null ) {
+					// Only list works that currently have no content.
+					echo "<option value=\"$doc->id\">$doc->title</option>";
+				}
+			}
+			?>
+		</select></td>
+	</tr>
+	<tr>
+		<td>File (XML only):</td><td> <input type="file" name="userfile"/></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="submit" value="Upload"/></td>
+	</tr>
+	</table>
 	</form>
 <?php } ?>
 
