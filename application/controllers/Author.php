@@ -17,7 +17,8 @@ class Author extends CI_Controller {
 
 		// Add the author to the database.
 		$this->load->model('Author_model');
-		$this->Author_model->add( $this->input->post('name'), $this->input->post('icon') );
+		$this->Author_model->add( $this->input->post('name'), $this->input->post('icon'), 
+			$this->input->post('bio') );
 
 		// We're done. Return home.
 		redirect('/');

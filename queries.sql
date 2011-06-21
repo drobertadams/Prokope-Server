@@ -26,6 +26,7 @@ create table if not exists `authors` (
 	`icon` varchar(1024) default '',
 	`created` datetime not null,
 	`userid` int(11) not null,
+	`bio` mediumtext default null,
 	primary key(`id`)
 ) engine=myisam default charset=utf8;
 
@@ -72,3 +73,6 @@ create table if not exists `sidebars` (
 #alter table documents change column `content` `content` mediumtext default '';
 # Add the root "Document" with id=1.
 insert into documents (id, title, created, userid, authorid, parentid) values (1, "Document", now(), -1, -1, NULL); 
+
+# Add support for author biographical information.
+#alter table authors add column (`bio` mediumtext default null);

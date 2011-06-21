@@ -9,6 +9,7 @@
 		if (count($docs) > 0) {
 
 			print("<author name=\"$author->name\" icon=\"$author->icon\">\n");
+			print("\t<bio>$author->bio</bio>\n");
 
 			/* This is a rather complex bit of code created in order to avoid multiple queries to the
 			 * database. Each document has a parentid that creates a hierarchy. The document_model

@@ -108,9 +108,20 @@ if ( isset($authors) ) {
 <?php if ($this->quickauth->logged_in()) { ?>
 	<p><a href="#" id="author_upload_form_label">Create New Author</a></p>
 	<form id="author_upload_form" action="<?php echo site_url("Author/add");?>" method="post">
-		Name: <input type="text" name="name" /> <br/>
-		Icon URL: <input type="text" name="icon" /> <br/>
-		<input type="submit" value="Upload">
+		<table>
+		<tr>
+			<td>Name</td> <td><input type="text" name="name" /></td>
+		</tr>
+		<tr>
+			<td>Icon URL</td> <td> <input type="text" name="icon" /> </td>
+		</tr>
+		<tr>
+			<td>Bio</td> <td><textarea name="bio" rows="10"></textarea> </td>
+		</tr>
+		<tr>
+			<td colspan="2" ><input type="submit" value="Upload"/></td>
+		</tr>
+		</table>
 	</form>
 <?php } ?>
 
