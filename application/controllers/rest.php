@@ -28,11 +28,13 @@ class rest extends CI_Controller
 		$this->output->set_output(<<<EOT
 		<prokope>
 			<author name="Cicero" icon="url">
+				<bio>All about Cicero.</bio>
 				<work name="Work 1" url="url" />
 				<work name="Work 2" url="url" />
 				<work name="Work 3" url="url" />
 			</author>
 			<author name="Martial" icon="url">
+				<bio>All about Martial.</bio>
 				<work name="Work 0" url="$url" />
 				<work name="Work 1" url="url" />
 				<work name="Work 2" url="url" />
@@ -65,16 +67,19 @@ class rest extends CI_Controller
 				<work name="Work 29" url="url" />
 			</author>
 			<author name="Agricola" icon="url">
+				<bio>All about Agricola.</bio>
 				<work name="Work 1" url="url" />
 				<work name="Work 2" url="url" />
 				<work name="Work 3" url="url" />
 			</author>
 			<author name="Caeser" icon="url">
+				<bio>All about Caeser.</bio>
 				<work name="Work 1" url="url" />
 				<work name="Work 2" url="url" />
 				<work name="Work 3" url="url" />
 			</author>
 			<author name="Pliny" icon="url">
+				<bio>All about Pliny.</bio>
 				<work name="Work 1" url="url" />
 				<work name="Work 2" url="url" />
 				<work name="Work 3" url="url" />
