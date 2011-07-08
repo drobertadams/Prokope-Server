@@ -4,6 +4,13 @@
 class rest extends CI_Controller 
 {
 
+	/** A test method that simply echos back the input that is given. */
+	public function test($data)
+	{
+		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
+		print("<result>" . $data . "</result>");
+	}
+
 	/** Get a document and all associated content. */
 	public function document($id)
 	{
@@ -24,7 +31,7 @@ class rest extends CI_Controller
 	public function big()
 	{
 		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
-		$url = site_url("rest/document/1");
+		$url = site_url("rest/document/3");
 		$this->output->set_output(<<<EOT
 		<prokope>
 			<author name="Cicero" icon="url">

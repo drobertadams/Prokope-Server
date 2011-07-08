@@ -1,16 +1,55 @@
 Prokope XML Format Documentation
 
-=Main Document=
 
-body
-	[chapter @id]
-		[section @id]
-	[div1]
-		[div2]
-			[lg @type]				- line group
-				[l @n]				- line
-					w @id			- word
-					pc				- punctuation
-			sentence				- sentence
-				w @id				- word
+Syntax:
+	<name> is an element
+	@name is an attribute
+	? means 0 or 1 (optional)
+	* means 0 or more
+	+ means 1 or more
+	| means "or"
+	() are used for grouping
+	Indention matters
+	// starts a comment
 
+
+===Main Document===
+
+<TEI>
+	<teiHeader>
+		<fileDesc>
+			<titleStmt>
+				<title>
+			<publicationStmt>
+				<p>
+			<sourceDesc>
+				<p>
+	<text>
+		<body>
+			<div1>+
+				<div2>+
+					<lg @n @type>+
+						<l @n>+
+							( <w @id> | <pc> )+
+			| <chapter @id>+ 
+				<section @id>+
+					<sentence>+
+						( <w @id> | <pc> )+
+
+
+
+===Commentary===
+
+<commentary>
+	<comment @ref @title? @type>+
+
+
+===Vocabulary===
+
+<vocabulary>
+	<vocab @ref>+
+
+
+===Sidebar===
+
+<sidebar>
