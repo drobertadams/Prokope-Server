@@ -3,30 +3,6 @@
 /** Controller for REST. */
 class rest extends CI_Controller 
 {
-
-	/** A test method that simply echos back the input that is given. */
-	public function test($data)
-	{
-		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
-		print("<result>" . $data . "</result>");
-	}
-
-	/** Get a document and all associated content. */
-	public function document($id)
-	{
-		$this->load->helper('my_document_helper');
-		$data = get_document_components($id);
-		$this->load->view('doc_view_xml', $data);
-	}
-
-	/** Get a list of everything that is available in the database. */
-	public function index()
-	{
-		$this->load->model("Document_model");
-		$this->load->model("Author_model");
-		$this->load->view('documents_xml');
-	}
-
 	/** Dummy list of lots of data. */
 	public function big()
 	{
@@ -96,4 +72,48 @@ EOT
 		); 
 
 	}
+
+	/** Get a document and all associated content. */
+	public function document($id)
+	{
+		$this->load->helper('my_document_helper');
+		$data = get_document_components($id);
+		$this->load->view('doc_view_xml', $data);
+	}
+
+	/** Get a list of everything that is available in the database. */
+	public function index()
+	{
+		$this->load->model("Document_model");
+		$this->load->model("Author_model");
+		$this->load->view('documents_xml');
+	}
+
+	/** Dummy method to register a user. The format should be:
+	 *  rest/register/username/USERNAME/password/PASSWORD/professor/PROFESSOR
+	 */
+	public function register()
+	{
+		$uri_keys = array('username', 'password', 'professor');
+		$uri_vals = $this->uri->uri_to_assoc(3, $uri_keys);
+		if ( $uri_vals['username'] == 'true' ) {
+			print("<result>1</result>\n");
+		}
+		else {
+			print("<result>-1</result>\n");
+		}
+
+
+/*		echo $uri_vals['username'];	
+		echo $uri_vals['password'];	
+		echo $uri_vals['professor'];	 */
+	}
+
+	/** A test method that simply echos back the input that is given. */
+	public function test($data)
+	{
+		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
+		print("<result>" . $data . "</result>");
+	}
+
 }
