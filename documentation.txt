@@ -42,14 +42,18 @@ Syntax:
 
 <commentary>
 	<comment @ref @title? @type>+
+	// @ref should reference the unique id of a word
+	// @type should one of "cultural", "realia", "philosophical", or "historical"
 
 
 ===Vocabulary===
 
 <vocabulary>
 	<vocab @ref>+
+	// @ref should reference the unique id of a word
 
 
 ===Sidebar===
 
 <sidebar>
+	// ANY TEXT
