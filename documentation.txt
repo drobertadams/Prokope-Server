@@ -41,10 +41,12 @@ Syntax:
 ===Commentary===
 
 <commentary>
-	<comment @ref @title? @type>+
-	// @ref should reference the unique id of a word
-	// @type should one of "cultural", "realia", "philosophical", or "historical"
-
+	<comment @ref @title? @type>* |
+		// @ref should reference the unique id of a word
+		// @type should one of "cultural", "realia", "philosophical", or "historical"
+	<img @ref @src />*
+		// @ref should reference the unique id of a word
+		// @src is the URL of the image
 
 ===Vocabulary===
 

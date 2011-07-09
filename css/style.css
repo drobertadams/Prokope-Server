@@ -6,6 +6,11 @@ body {
     color: #333333;
 }
 
+img {
+	margin-left: 0.2em;
+	height: 1em;
+}
+
 /*=== Comments ===*/
 
 /* A word that has a comment. */
