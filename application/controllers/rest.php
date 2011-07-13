@@ -88,25 +88,97 @@ EOT
 		$this->load->model("Author_model");
 		$this->load->view('documents_xml');
 	}
+	
+	/** Returns a list of professors. */
+	public function professor()
+	{
+		/* Get the group id of the "professor" group. */
+		$this->db->select('*')->from('groups')->where('title', 'professor');
+		$q = $this->db->get();
+		$data = $q->row();
+		$id = $data->id;
+		
+		/* Get a list of users that are professors. */
+		$this->db->select('*')->from('users')->
+			join('group_memberships', 'users.id=group_memberships.userid')->where('groupid', $id);
+		$q = $this->db->get();
+		$profs = $q->result();
 
-	/** Dummy method to register a user. The format should be:
+		/* Tell the browser we're outputting XML. */
+		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
+		print("<professors>\n");
+
+		foreach ($profs as $prof) {
+			print("<professor username=\"$prof->username\" fullname=\"$prof->lastname, $prof->firstname\" id=\"$prof->userid\" />\n");
+		}
+		print("</professors>\n");
+
+	}
+
+	/** Register a user. The URI format should be:
 	 *  rest/register/username/USERNAME/password/PASSWORD/professor/PROFESSOR
+	 *  USERNAME is the user's email, PROFESSOR is the username (email) of the professor.
+	 *  Returns <result>N</result> where
+	 *		N=-2 : error in URI string
+	 *		N=-1 : user already registered
+	 *		N=1  : success
 	 */
 	public function register()
 	{
-		$uri_keys = array('username', 'password', 'professor');
+		/* URI field names. */
+		$USERNAME = "username";
+		$PASSWORD = "password";
+		$PROFESSOR = "professor";
+		
+		/* Tell the browser we're outputting XML. */
+		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
+
+		/* Decompose the URI string into elements and decode them. */
+		$uri_keys = array($USERNAME, $PASSWORD, $PROFESSOR);
 		$uri_vals = $this->uri->uri_to_assoc(3, $uri_keys);
-		if ( $uri_vals['username'] == 'true' ) {
-			print("<result>1</result>\n");
-		}
-		else {
-			print("<result>-1</result>\n");
+		$uri_vals[$USERNAME] = urldecode($uri_vals[$USERNAME]);
+		$uri_vals[$PASSWORD] = urldecode($uri_vals[$PASSWORD]);
+		$uri_vals[$PROFESSOR] = urldecode($uri_vals[$PROFESSOR]);
+
+		/* Make sure all three components are listed. If not, fail. */
+		if ( ! $uri_vals[$USERNAME] || ! $uri_vals[$PASSWORD] || ! $uri_vals[$PROFESSOR] ) {
+			print("<result>-2</result>");
+			return;
 		}
 
+		/* If already registered, fail. */
+		$this->db->select('id')->from('users')->where('username', $uri_vals[$USERNAME]);
+		$q = $this->db->get();	
+		if ($q->num_rows() > 0) {
+			print("<result>-1</result>");
+			return;
+		} 
 
-/*		echo $uri_vals['username'];	
-		echo $uri_vals['password'];	
-		echo $uri_vals['professor'];	 */
+		/* Register the basic user info. */
+		$userdata = array(
+			'type'      => array(2), // Users registered RESTfully go into group "2" (user).
+			'username'  => $uri_vals[$USERNAME],
+			'password'  => $uri_vals[$PASSWORD],
+			'firstname' => '',
+			'lastname' 	=> ''	
+		);
+		$this->quickauth->register($userdata);
+
+		/* Get the professor's id. */
+		$this->db->select('id')->from('users')->where('username', $uri_vals[$PROFESSOR]);
+		$q = $this->db->get();
+		$row = $q->row();
+		$prof_id = $row->id;
+
+		/* Update the "professorid" field for the newly added user. */
+		$data = array(
+			'professorid' => $prof_id
+		);
+		$this->db->where('username', $uri_vals[$USERNAME]);
+		$this->db->update('users', $data);
+
+		/* Success! */
+		print("<result>1</result>\n");
 	}
 
 	/** A test method that simply echos back the input that is given. */

@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(45) NOT NULL DEFAULT '',
   `firstname` varchar(60) NOT NULL DEFAULT '',
   `lastname` varchar(60) NOT NULL DEFAULT '',
+  `professorid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -73,6 +74,10 @@ create table if not exists `sidebars` (
 #alter table documents change column `content` `content` mediumtext default '';
 # Add the root "Document" with id=1.
 insert into documents (id, title, created, userid, authorid, parentid) values (1, "Document", now(), -1, -1, NULL); 
+insert into groups (title) values ('professor');
 
 # Add support for author biographical information.
 #alter table authors add column (`bio` mediumtext default null);
+
+# Add support for professors.
+#alter table users add column (`professorid` int(11) default null);
