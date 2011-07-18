@@ -88,6 +88,53 @@ EOT
 		$this->load->model("Author_model");
 		$this->load->view('documents_xml');
 	}
+
+	/** Logs in a user. The URI format should be:
+	 *  rest/login/username/USERNAME/password/PASSWORD
+	 *  USERNAME is the user's email
+	 *  Returns <result>X</result> where
+	 *		N=professor : on success
+	 *		N=-1 		: fail
+	 *		N=-2 		: malformed URL
+	 */
+	public function login()
+	{
+		/* URI field names. */
+		$USERNAME = "username";
+		$PASSWORD = "password";
+		
+		/* Tell the browser we're outputting XML. */
+		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
+
+		/* Decompose the URI string into elements and decode them. */
+		$uri_keys = array($USERNAME, $PASSWORD);
+		$uri_vals = $this->uri->uri_to_assoc(3, $uri_keys);
+		$uri_vals[$USERNAME] = urldecode($uri_vals[$USERNAME]);
+		$uri_vals[$PASSWORD] = urldecode($uri_vals[$PASSWORD]);
+
+		/* Make sure both components are listed. If not, fail. */
+		if ( ! $uri_vals[$USERNAME] || ! $uri_vals[$PASSWORD] ) {
+			print("<result>-2</result>");
+			return;
+		}
+
+		/* Try to log in. */
+		if ( ! $this->quickauth->login( $uri_vals[$USERNAME], $uri_vals[$PASSWORD] ) ) {
+			print("<result>-1</result>");
+			return;
+		}
+
+		/* Login is successful. Get the professor's name. */
+		$userid = $this->session->userdata('userid');
+		$q = $this->db->query("select prof.username from users as prof join users as user on user.professorid=prof.id where user.id=$userid");
+
+		$professorname = ""; // default empty
+		if ($q->num_rows() > 0) {
+			$row = $q->row();
+			$professorname = $row->username;
+		}
+		print("<result>$professorname</result>");
+	}
 	
 	/** Returns a list of professors. */
 	public function professor()
@@ -189,3 +236,5 @@ EOT
 	}
 
 }
+
+?>
