@@ -5,7 +5,15 @@
 			<author><?php echo $document->userid; ?></author>
 			<content><?php echo $document->content; ?></content>
 	</text>
-	<?php if (isset($comment)) { echo $comment->content; } ?>
+	<commentary>
+	<?php foreach ($comments as $comment) { 
+		print "<li id=\"$comment->id\" ref=\"$comment->ref\" type=\"$comment->type\">";
+		if ( strlen($comment->title) > 0 ) {
+			print "<span class=\"title\">$comment->title</span>: ";
+		}
+		print "$comment->content</li>\n";
+	} ?>
+	</commentary>
 	<?php if (isset($vocabulary)) { echo $vocabulary->content; } ?>
 	<?php if (isset($sidebar)) { echo $sidebar->content; } ?>
 </document>

@@ -16,7 +16,13 @@
 
 <div class="contentbox" id="commentary">
 	<h2>Commentary</h2>
-	<?php if (isset($comment)) { echo $comment->content; } ?>
+	<?php foreach ($comments as $comment) { 
+		echo "<li id=\"$comment->id\" ref=\"$comment->ref\" type=\"$comment->type\">";
+		if ( strlen($comment->title) > 0 ) {
+			echo "<span class=\"title\">$comment->title</span>: ";
+		}
+		echo "$comment->content</li>\n";
+	} ?>
 	<?php // Display the upload form if the user is logged in and there are no comments already.
 		  if ($this->quickauth->logged_in() and $comment->id == 0 ) { ?>
 			<p><a href="#" id="upload_comment_form_label">Upload Comments</a></p>

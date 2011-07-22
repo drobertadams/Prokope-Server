@@ -13,6 +13,10 @@ img {
 
 /*=== Comments ===*/
 
+.title {
+	font-weight: bold;
+}
+
 /* A word that has a comment. */
 .commented {
     border-bottom: 1px dotted #cccccc;
