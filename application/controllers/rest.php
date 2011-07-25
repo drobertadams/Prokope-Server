@@ -218,15 +218,77 @@ EOT
 		$prof_id = $row->id;
 
 		/* Update the "professorid" field for the newly added user. */
-		$data = array(
-			'professorid' => $prof_id
-		);
+		$data = array( 'professorid' => $prof_id);
 		$this->db->where('username', $uri_vals[$USERNAME]);
 		$this->db->update('users', $data);
 
 		/* Success! */
 		print("<result>1</result>\n");
 	}
+
+	/** 
+	 * Update a user's registration information. The URI format should be:
+	 * rest/update/oldusername/OLDUSERNAME/newusername/NEWUSERNAME/password/PASSWORD/professor/PROFESSOR
+	 * Returns <result>N</result> where
+	 *		N=-2 : error in URI string
+	 *		N=-1 : user not found
+	 *		N=1  : success
+	 */
+	public function update()
+	{
+		/* URI field names. */
+		$OLDUSERNAME = "oldusername";
+		$NEWUSERNAME = "newusername";
+		$PASSWORD = "password";
+		$PROFESSOR = "professor";
+		
+		/* Tell the browser we're outputting XML. */
+		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
+
+		/* Decompose the URI string into elements and decode them. */
+		$uri_keys = array($OLDUSERNAME, $NEWUSERNAME, $PASSWORD, $PROFESSOR);
+		$uri_vals = $this->uri->uri_to_assoc(3, $uri_keys);
+		$uri_vals[$OLDUSERNAME] = urldecode($uri_vals[$OLDUSERNAME]);
+		$uri_vals[$NEWUSERNAME] = urldecode($uri_vals[$NEWUSERNAME]);
+		$uri_vals[$PASSWORD] = urldecode($uri_vals[$PASSWORD]);
+		$uri_vals[$PROFESSOR] = urldecode($uri_vals[$PROFESSOR]);
+
+		/* Make sure all three components are listed. If not, fail. */
+		if ( ! $uri_vals[$OLDUSERNAME] || ! $uri_vals[$NEWUSERNAME] || 
+			! $uri_vals[$PASSWORD] || ! $uri_vals[$PROFESSOR] ) {
+			print("<result>-2</result>");
+			return;
+		}
+
+		/* If not already registered, fail. */
+		$this->db->select('id')->from('users')->where('username', $uri_vals[$OLDUSERNAME]);
+		$q = $this->db->get();	
+		if ($q->num_rows() == 0) {
+			print("<result>-1</result>");
+			return;
+		} 
+
+		/* Get the professor's id. */
+		$this->db->select('id')->from('users')->where('username', $uri_vals[$PROFESSOR]);
+		$q = $this->db->get();
+		$row = $q->row();
+		$prof_id = $row->id;
+
+		/* Update the user's info. */
+		$userdata = array(
+			'username'  => $uri_vals[$NEWUSERNAME],
+			'password'  => $this->quickauth->encrypt( $uri_vals[$PASSWORD] ),
+			'firstname' => '',
+			'lastname' 	=> '',	
+			'professorid' => $prof_id
+		);
+		$this->db->where('username', $uri_vals[$OLDUSERNAME]);
+		$this->db->update('users', $userdata);
+
+		/* Success! */
+		print("<result>1</result>\n");
+	}
+
 
 	/** A test method that simply echos back the input that is given. */
 	public function test($data)
