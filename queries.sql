@@ -69,6 +69,18 @@ create table if not exists `sidebars` (
 	primary key(`id`)
 ) engine=myisam default charset=utf8; 
 
+# Type should be one of "like", "dislike", or "click".
+create table if not exists `events` (
+	`id` int(11) not null auto_increment,
+	`type` varchar(50) not null,
+	`created` datetime not null,
+	`userid` int(11) not null,
+	`document_id` int(11) not null,
+	`comment_id` int(11),
+	`word_id` varchar(50),
+	primary key(`id`)
+) engine=myisam default charset=utf8; 
+
 # Add support for hierarchical documents.
 #alter table documents add column (`parentid` int(11) default null);
 #alter table documents change column `content` `content` mediumtext default '';

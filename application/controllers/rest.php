@@ -89,6 +89,69 @@ EOT
 		$this->load->view('documents_xml');
 	}
 
+	/**
+	 * Logs user activity to the DB.
+	 * Assumes data comes in via POST with the format:
+	 * <entries user="USERNAME">
+	 *    <like date="2011-07-25 19:42:54" doc="DOCUMENTID" comment="COMMENTID" />
+	 *    <dislike date="2011-07-25 19:42:54" doc="DOCUMENTID" comment="COMMENTID" />
+	 *    <click date="2011-07-25 19:42:54" doc="DOCUMENTID" word="WORDID" />
+	 * </entries>
+	 * Where:
+	 *		USERNAME is the email address of the user
+	 *		DOCUMENTID is the (int) unique document id
+	 *		COMMENTID is the (int) unique comment id
+	 * 		WORDID is the id of the word within the document (usually of the form "10.2.1.14")
+	 * Returns "<result>1</result>" on success, 
+	 * 		<result>-1</result> on user not found,
+	 * 		<result>-2</result> on a runtime exception (probably malformed XML).
+	 */
+	public function log()
+	{
+		/* Tell the browser we're outputting XML. */
+		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
+
+		try {
+			/* Grab the XML document inside the HTML body. */
+			$xml = @file_get_contents('php://input');
+			libxml_use_internal_errors(true);
+			$entries = new SimpleXMLElement($xml);
+			if ( ! $entries ) {
+				print("<result>-2</result>");
+				return;
+			}
+
+			/* Find the user's id. */
+			$userid = -1;
+			$this->db->select('id')->from('users')->where('username', (string) $entries['user']);
+			$q = $this->db->get();
+			if ($q->num_rows() > 0) {
+				$row = $q->row();
+				$userid = $row->id;
+			}
+			if ($userid == -1) {
+				print("<result>-1</result>");
+				return;
+			}
+			
+			$this->load->model("Event_model");
+			foreach ($entries->children() as $child) {
+				if ($child->getName() == 'like' || $child->getName() == 'dislike') {
+					$this->Event_model->add($child->getName(), (string) $child['date'], $userid, 
+						(string) $child['doc'], (string) $child['comment']);
+				}
+				else if ($child->getName() == 'click') {
+					$this->Event_model->add($child->getName(), (string) $child['date'], $userid, 
+						(string) $child['doc'], NULL, (string) $child['word']);
+				}
+			} 
+			print("<result>1</result>");
+		} catch (Exception $e) {
+			print("<result>-2</result>");
+		}
+		
+	}
+
 	/** Logs in a user. The URI format should be:
 	 *  rest/login/username/USERNAME/password/PASSWORD
 	 *  USERNAME is the user's email
