@@ -95,13 +95,16 @@ EOT
 	 * <entries user="USERNAME">
 	 *    <like date="2011-07-25 19:42:54" doc="DOCUMENTID" comment="COMMENTID" />
 	 *    <dislike date="2011-07-25 19:42:54" doc="DOCUMENTID" comment="COMMENTID" />
+	 * 	  <media date="2011-08-03 08:24:00" doc="DOCUMENTID" comment="COMMENTID" />
 	 *    <click date="2011-07-25 19:42:54" doc="DOCUMENTID" word="WORDID" />
+	 *	  <follow date="2011-08-03 08:27:00" doc="DOCUMENTID" url="URL" />
 	 * </entries>
 	 * Where:
 	 *		USERNAME is the email address of the user
 	 *		DOCUMENTID is the (int) unique document id
 	 *		COMMENTID is the (int) unique comment id
 	 * 		WORDID is the id of the word within the document (usually of the form "10.2.1.14")
+	 *		URL is the URL that was followed
 	 * Returns "<result>1</result>" on success, 
 	 * 		<result>-1</result> on user not found,
 	 * 		<result>-2</result> on a runtime exception (probably malformed XML).
@@ -136,20 +139,61 @@ EOT
 			
 			$this->load->model("Event_model");
 			foreach ($entries->children() as $child) {
-				if ($child->getName() == 'like' || $child->getName() == 'dislike') {
+				if ($child->getName() == 'like' || $child->getName() == 'dislike' || 
+					$child->getName() == 'media') {
 					$this->Event_model->add($child->getName(), (string) $child['date'], $userid, 
-						(string) $child['doc'], (string) $child['comment']);
+						(string) $child['doc'], (string) $child['comment'], NULL);
 				}
 				else if ($child->getName() == 'click') {
 					$this->Event_model->add($child->getName(), (string) $child['date'], $userid, 
-						(string) $child['doc'], NULL, (string) $child['word']);
+						(string) $child['doc'], NULL, (string) $child['word'], NULL);
 				}
+				else if ($child->getName() == 'follow') {
+					$this->Event_model->add($child->getName(), (string) $child['date'], $userid, 
+						(string) $child['doc'], NULL, NULL, (string) $child['url']);
+				}
+
 			} 
 			print("<result>1</result>");
 		} catch (Exception $e) {
 			print("<result>-2</result>");
 		}
 		
+	}
+
+	/**
+	 * Testing function. Dumps out all the events in the database.
+	 */
+	public function events()
+	{
+		/* Tell the browser we're outputting XML. */
+		$this->output->set_header("Content-type: application/xml; charset=UTF-8");
+
+		/* Get the events. */
+		$this->load->model("Event_model");
+		$events = $this->Event_model->get();
+
+		/* Generate XML. */
+		print "<events>\n";
+		foreach ($events as $event) {
+			printf("<%s date=\"%s\" doc=\"%d\" ", $event->type, $event->created, $event->document_id);
+			switch ($event->type) {
+				case "like":
+				case "dislike":
+				case "media":
+					printf("comment=\"%d\"", $event->comment_id);
+					break;
+				case "click":
+					printf("word=\"%s\"", $event->word_id);
+					break;
+				case "follow":
+					printf("url=\"%s\"", $event->url);
+					break;
+			}
+			print " />\n";
+		}
+		print "</events>\n";
+
 	}
 
 	/** Logs in a user. The URI format should be:

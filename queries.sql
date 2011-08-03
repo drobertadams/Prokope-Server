@@ -69,7 +69,10 @@ create table if not exists `sidebars` (
 	primary key(`id`)
 ) engine=myisam default charset=utf8; 
 
-# Type should be one of "like", "dislike", or "click".
+# Type should be one of "like", "dislike", "click", "media", or "follow".
+# like, dislike, and media use comment_id
+# click uses word_id
+# follow uses url
 create table if not exists `events` (
 	`id` int(11) not null auto_increment,
 	`type` varchar(50) not null,
@@ -78,6 +81,7 @@ create table if not exists `events` (
 	`document_id` int(11) not null,
 	`comment_id` int(11),
 	`word_id` varchar(50),
+	`url` mediumtext,
 	primary key(`id`)
 ) engine=myisam default charset=utf8; 
 
@@ -104,3 +108,6 @@ insert into groups (title) values ('user');
 #alter table comments add column (`title` mediumtext default null);
 #alter table comments change column `content` `content` mediumtext default '';
 #alter table comments add column (`src` mediumtext default null);
+
+# Add support for logging clicks on media and sidebar links.
+#alter table events add column (`url` mediumtext default null);
