@@ -1,6 +1,5 @@
 Prokope XML Format Documentation
 
-
 Syntax:
 	<name> is an element
 	@name is an attribute
@@ -26,11 +25,14 @@ Syntax:
 				<p>
 	<text>
 		<body>
+			// For poetry...
 			<div1>+
 				<div2>+
 					<lg @n @type>+
 						<l @n>+
 							( <w @id> | <pc> )+
+
+			// For prose...
 			| <chapter @id>+ 
 				<section @id>+
 					<sentence>+
@@ -41,12 +43,10 @@ Syntax:
 ===Commentary===
 
 <commentary>
-	<comment @ref @title? @type>* |
+	<comment @ref @title? @type @src?>* |
 		// @ref should reference the unique id of a word
-		// @type should one of "cultural", "realia", "philosophical", or "historical"
-	<img @ref @src />*
-		// @ref should reference the unique id of a word
-		// @src is the URL of the image
+		// @type should one of "cultural", "realia", "philosophical", "historical", or "image"
+		// @src is the URL, if an image.
 
 ===Vocabulary===
 
