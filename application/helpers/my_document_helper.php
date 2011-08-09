@@ -28,6 +28,60 @@ if ( ! function_exists('__inject_images')) {
 	}
 }
 
+if ( ! function_exists('__inject_videos')) {
+	/* $comment is a Comment_model object */
+	function __inject_videos($comment)
+	{
+		$CI =& get_instance();
+
+		$tag = "";
+
+		/* Create a clickable links. */
+		$url = base_url() . "images/video.jpg";
+		$tag = "<a type=\"media\" id=\"$comment->id\" href=\"$comment->src\"><img src=\"$url\" /></a>";
+
+		/* Now insert $tag into the document. */
+		$pos = strpos($CI->Document_model->content, $comment->ref); // find the ref in the document
+		if ($pos > 0) {
+			/* The ref should appear in an <a href="REF"...> element. $pos will refer
+			 * to where that REF appears. Scan forward to the next </a> element.
+			 */
+			$close_a = stripos($CI->Document_model->content, "</a>", $pos);
+			$close_a += 4; // move over the "</a>" characters.
+			/* Now insert the image. */
+			$CI->Document_model->content = substr_replace($CI->Document_model->content, $tag, $close_a, 0);
+		}
+	}
+}
+
+if ( ! function_exists('__inject_audios')) {
+	/* $comment is a Comment_model object */
+	function __inject_audios($comment)
+	{
+		$CI =& get_instance();
+
+		$tag = "";
+
+		/* Create a clickable links. */
+		$url = base_url() . "images/audio.jpg";
+		$tag = "<a type=\"media\" id=\"$comment->id\" href=\"$comment->src\"><img src=\"$url\" /></a>";
+
+		/* Now insert $tag into the document. */
+		$pos = strpos($CI->Document_model->content, $comment->ref); // find the ref in the document
+		if ($pos > 0) {
+			/* The ref should appear in an <a href="REF"...> element. $pos will refer
+			 * to where that REF appears. Scan forward to the next </a> element.
+			 */
+			$close_a = stripos($CI->Document_model->content, "</a>", $pos);
+			$close_a += 4; // move over the "</a>" characters.
+			/* Now insert the image. */
+			$CI->Document_model->content = substr_replace($CI->Document_model->content, $tag, $close_a, 0);
+		}
+	}
+}
+
+
+
 // ------------------------------------------------------------------------
 /** Utility function to fetch a document and all associated components. 
  * Returns an array of {document, comment, vocabulary, sidebar} containing
@@ -66,12 +120,29 @@ if ( ! function_exists('get_document_components'))
 			array_push($comments, $comment);
 		}
 		// Find and remove all comments with type="image" and inject them into the document.
-		for ($i = 0; $i < count($comments); $i++) {
+		foreach (array_keys($comments) as $i) {
 			if ($comments[$i]->type == "image") {
 				__inject_images($comments[$i]);
 				unset($comments[$i]); // remove from the array
 			}
 		} 
+		// Find and remove all comments with type="video" and inject them into the document.
+		foreach (array_keys($comments) as $i) {
+			if ($comments[$i]->type == "video") {
+				__inject_videos($comments[$i]);
+				unset($comments[$i]); // remove from the array
+			}
+		} 
+		// Find and remove all comments with type="audio" and inject them into the document.
+		foreach (array_keys($comments) as $i) {
+			if ($comments[$i]->type == "audio") {
+				__inject_audios($comments[$i]);
+				unset($comments[$i]); // remove from the array
+			}
+		} 
+
+
+
 
 		// Fetch the associated vocabulary.
 		$CI->load->model('Vocabulary_model');
