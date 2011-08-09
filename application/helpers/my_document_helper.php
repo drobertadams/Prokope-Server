@@ -12,7 +12,7 @@ if ( ! function_exists('__inject_images')) {
 		$img = "";
 
 		/* Convert the img element into an clickable <a href>. */
-		$img = "<a id=\"$comment->id\" href=\"$comment->src\"><img src=\"$comment->src\" /></a>";
+		$img = "<a type=\"media\" id=\"$comment->id\" href=\"$comment->src\"><img src=\"$comment->src\" /></a>";
 
 		/* Now insert $img into the document. */
 		$pos = strpos($CI->Document_model->content, $comment->ref); // find the ref in the document
