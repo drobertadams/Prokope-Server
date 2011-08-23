@@ -80,6 +80,33 @@ if ( ! function_exists('__inject_audios')) {
 	}
 }
 
+if ( ! function_exists('__inject_maps')) {
+	/* $comment is a Comment_model object */
+	function __inject_maps($comment)
+	{
+		$CI =& get_instance();
+
+		$tag = "";
+
+		/* Create a clickable links. */
+		$url = base_url() . "images/map.jpg";
+		$tag = "<a type=\"media\" id=\"$comment->id\" href=\"$comment->src\"><img src=\"$url\" /></a>";
+
+		/* Now insert $tag into the document. */
+		$pos = strpos($CI->Document_model->content, $comment->ref); // find the ref in the document
+		if ($pos > 0) {
+			/* The ref should appear in an <a href="REF"...> element. $pos will refer
+			 * to where that REF appears. Scan forward to the next </a> element.
+			 */
+			$close_a = stripos($CI->Document_model->content, "</a>", $pos);
+			$close_a += 4; // move over the "</a>" characters.
+			/* Now insert the image. */
+			$CI->Document_model->content = substr_replace($CI->Document_model->content, $tag, $close_a, 0);
+		}
+	}
+}
+
+
 
 
 // ------------------------------------------------------------------------
@@ -140,6 +167,14 @@ if ( ! function_exists('get_document_components'))
 				unset($comments[$i]); // remove from the array
 			}
 		} 
+		// Find and remove all comments with type="map" and inject them into the document.
+		foreach (array_keys($comments) as $i) {
+			if ($comments[$i]->type == "map") {
+				__inject_maps($comments[$i]);
+				unset($comments[$i]); // remove from the array
+			}
+		} 
+
 
 
 
